@@ -1,0 +1,32 @@
+{
+  "name": "last-spot-dash",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "dependencies": {
+    "bluebird": "*",
+    "body-parser": "*",
+    "express": "*",
+    "express-partials": "*",
+    "lastfmapi": "*",
+    "mongoose": "*",
+    "morgan": "*",
+    "request": "*",
+    "tiny-lr": "*"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gnauhnoj/last-spot-dash.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gnauhnoj/last-spot-dash/issues"
+  },
+  "homepage": "https://github.com/gnauhnoj/last-spot-dash"
+}
