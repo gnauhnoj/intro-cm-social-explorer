@@ -5,6 +5,7 @@ var Report = require('../models/report.js');
 var Song = require('../models/song.js');
 var Artist = require('../models/artist.js');
 var path = require('path');
+var OAuth = require('oauth').OAuth;
 
 var username;
 var key;
@@ -15,6 +16,54 @@ module.exports = exports = function (router) {
       var localpath = path.resolve();
       res.sendFile(localpath+'/client/public/client/templates/index.html');
     });
+
+  // router.route('/auth/twitter')
+  //   .get(function(req, res) {
+  //     oauth.getOAuthRequestToken(function(error, oauth_token, oauth_token_secret, results) {
+  //       if (error) {
+  //         console.log(error);
+  //         res.send("Authentication Failed!");
+  //       }
+  //       else {
+  //         req.session.oauth = {
+  //           token: oauth_token,
+  //           token_secret: oauth_token_secret
+  //         };
+  //         console.log(req.session.oauth);
+  //         res.redirect('https://twitter.com/oauth/authenticate?oauth_token='+oauth_token)
+  //       }
+  //     }
+  //   });
+
+  // router.route('/auth/twitter/callback')
+  //   .get(function(req, res, next) {
+  //     if (req.session.oauth) {
+  //       req.session.oauth.verifier = req.query.oauth_verifier;
+  //       var oauth_data = req.session.oauth;
+     
+  //       oauth.getOAuthAccessToken(
+  //         oauth_data.token,
+  //         oauth_data.token_secret,
+  //         oauth_data.verifier,
+  //         function(error, oauth_access_token, oauth_access_token_secret, results) {
+  //           if (error) {
+  //             console.log(error);
+  //             res.send("Authentication Failure!");
+  //           }
+  //           else {
+  //             req.session.oauth.access_token = oauth_access_token;
+  //             req.session.oauth.access_token_secret = oauth_access_token_secret;
+  //             console.log(results, req.session.oauth);
+  //             res.send("Authentication Successful");
+  //             // res.redirect('/'); // You might actually want to redirect!
+  //           }
+  //         }
+  //       );
+  //     }
+  //     else {
+  //       res.redirect('/'); // Redirect to login page
+  //     }
+  //   });
 
   router.route('/auth')
     .get(function(req, res) {

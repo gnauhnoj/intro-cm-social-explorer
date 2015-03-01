@@ -12,7 +12,8 @@
     "mongoose": "*",
     "morgan": "*",
     "request": "*",
-    "tiny-lr": "*"
+    "tiny-lr": "*",
+    "oauth": "*"
   },
   "devDependencies": {},
   "scripts": {
