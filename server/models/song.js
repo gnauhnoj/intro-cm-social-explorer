@@ -4,6 +4,7 @@ var mongoose = require('mongoose');
 var lfm = require('../main/lfm.js');
 
 var songSchema = new mongoose.Schema({
+  username: String,
   artist: String,
   title: String,
   minutes: Number,
@@ -12,7 +13,10 @@ var songSchema = new mongoose.Schema({
   load: Boolean
 });
 
+var model = module.exports = mongoose.model('Song', songSchema);
+
 songSchema.post('save',function(next) {
+  var username = this.username;
   lfm.track.getInfo({
     'artist': this.artist,
     'track': this.title
@@ -29,12 +33,10 @@ songSchema.post('save',function(next) {
       art = track.album.image[track.album.image.length-1]['#text'];
       replace = {minutes: minutes, art: art, load: true};
     }
-    var search = {artist: track.artist.name, title: track.name};
+    var search = {artist: track.artist.name, title: track.name, username: username};
 
     model.update(search, replace, function(err, stuff){
       if (err) { throw(err); }
     });
   });
 });
-
-var model = module.exports = mongoose.model('Song', songSchema);
