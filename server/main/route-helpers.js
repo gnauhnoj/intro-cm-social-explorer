@@ -32,47 +32,49 @@ var authLFM = function(req, res) {
       Artist.remove({username : session.username}, function(err) {
         console.log('Artist collection removed');
       });
-
       res.redirect('/getstats');
     }
   });
 };
 
 var buildReport = function(req, res){
-  var replace = {};
+  var report = {
+    username: req.session.username,
+    key: req.session.key
+  };
 
   // TODO: Promisify this for Dafi probably
   Song.find({username: req.session.username}).sort('-count').exec(function(err, sortedSongs) {
     // get references to more than one song
     var topSong = sortedSongs[0];
-    replace.MaxSong = topSong.title;
-    replace.MaxSongPlays = topSong.count;
-    replace.MaxSongArtist = topSong.artist;
-    replace.minutes = 0;
-    replace.total = 0;
+    report.MaxSong = topSong.title;
+    report.MaxSongPlays = topSong.count;
+    report.MaxSongArtist = topSong.artist;
+    report.minutes = 0;
+    report.total = 0;
     if (topSong.art) {
-      replace.MaxSongArt = topSong.art;
+      report.MaxSongArt = topSong.art;
     }
 
     for (var count=0; count < sortedSongs.length; count++) {
-      replace.minutes += (sortedSongs[count].minutes * sortedSongs[count].count);
-      replace.total += sortedSongs[count].count;
+      if (sortedSongs[count].minutes) {
+        report.minutes += (sortedSongs[count].minutes * sortedSongs[count].count);
+      }
+      report.total += sortedSongs[count].count;
     }
 
     Artist.find({username: req.session.username}).sort('-count').exec(function(err, sortedArtists) {
       var topArtist = sortedArtists[0];
-      replace.MaxArtist = topArtist.artist;
-      replace.MaxArtistPlays = topArtist.count;
+      report.MaxArtist = topArtist.artist;
+      report.MaxArtistPlays = topArtist.count;
       if (topArtist.art) {
-        replace.MaxArtistArt = topArtist.art;
+        report.MaxArtistArt = topArtist.art;
       }
 
-      Report.find({username: req.session.username}, function(err, report) {
-        Report.update({username: report[0].username}, replace, function (err, result){
-          Report.find({username: report[0].username}, function(err, result){
-            res.status(200).send(result[0]);
-          });
-        });
+      var newReport = new Report(report);
+      newReport.save(function(err, stuff){
+        if (err) {throw (err);}
+        res.status(200).send(stuff);
       });
     });
   });

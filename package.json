@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "dependencies": {
-    "bluebird": "*",
+    "async": "^0.9.0",
     "body-parser": "*",
     "connect": "^3.3.4",
     "connect-domain": "^0.5.0",
