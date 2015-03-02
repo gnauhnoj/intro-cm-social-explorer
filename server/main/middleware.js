@@ -19,14 +19,6 @@ var handleError = function (err, req, res, next) {
   // next();
 };
 
-var cleanEmail = function (req, res, next) {
-  if (req.body.email) {
-    req.body.email = req.body.email.toLowerCase().trim();
-    return next();
-  }
-  return next();
-};
-
 var cors = function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Credentials', true);
@@ -42,7 +34,6 @@ var cors = function (req, res, next) {
 
 module.exports = exports = {
   logError: logError,
-  cleanEmail: cleanEmail,
   handleError: handleError,
   cors: cors
 };

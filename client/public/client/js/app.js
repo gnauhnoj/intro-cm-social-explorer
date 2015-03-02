@@ -43,7 +43,6 @@ app.controller('getStats', function($scope, $http) {
     }).error(function(data) {
       console.log('errors', data);
     });
-
 });
 
 app.controller('dashArea', function($scope, $http) {
