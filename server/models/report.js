@@ -6,13 +6,8 @@ var reportSchema = new mongoose.Schema({
   username: String,
   key: String,
   minutes: Number,
-  MaxArtistPlays: Number,
-  MaxArtist: String,
-  MaxArtistArt: String,
-  MaxSongPlays: Number,
-  MaxSongArtist: String,
-  MaxSong: String,
-  MaxSongArt: String,
+  Artist: [],
+  Song: [],
   total: Number
 });
 

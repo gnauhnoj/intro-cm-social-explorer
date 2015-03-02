@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('last-spot-dash', ['ngRoute']);
+var app = angular.module('last-gram-dash', ['ngRoute']);
 
 app.config(function($routeProvider, $locationProvider) {
   $locationProvider.html5Mode(true);
@@ -30,16 +30,18 @@ app.controller('getStats', function($scope, $http) {
     .success(function(data,status,headers,config) {
       console.log('DataBACK', data);
       // data.sort
-      $scope.MaxArtist = data.MaxArtist;
-      $scope.MaxArtistArt = data.MaxArtistArt;
-      $scope.MaxArtistPlays = data.MaxArtistPlays;
-      $scope.MaxSong = data.MaxSong;
-      $scope.MaxSongArtist = data.MaxSongArtist;
-      $scope.MaxSongPlays = data.MaxSongPlays;
+      $scope.MaxArtist = data.Artist[0].MaxArtist;
+      $scope.MaxArtistArt = data.Artist[0].MaxArtistArt;
+      $scope.MaxArtistPlays = data.Artist[0].MaxArtistPlays;
+      $scope.MaxSong = data.Song[0].MaxSong;
+      $scope.MaxSongArtist = data.Song[0].MaxSongArtist;
+      $scope.MaxSongPlays = data.Song[0].MaxSongPlays;
+      $scope.MaxSongArt = data.Song[0].MaxSongArt;
       $scope.minutes = Math.round(data.minutes);
       $scope.username = data.username;
-      $scope.MaxSongArt = data.MaxSongArt;
       $scope.total = data.total;
+      $scope.Artist = data.Artist;
+      $scope.Song = data.Song;
     }).error(function(data) {
       console.log('errors', data);
     });

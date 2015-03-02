@@ -4,7 +4,7 @@
 
   <div class="featurette">
     <h2 class="featurette-heading pagination-centered"><span class="muted">Hi</span> {{username}} <br>
-      <h3 class="featurette-heading pagination-centered"><span class="muted">Welcome to Your Day In Review</span> </h3>
+      <h3 class="featurette-heading pagination-centered"><span class="muted">Welcome to Your 3 Month Music Checkpoint</span> </h3>
     </h2>
   </div>
 
@@ -26,11 +26,59 @@
 
   <hr class="featurette-divider">
 
+  <div class="featurette">
+    <h2 class="featurette-heading"><span class="muted">Top 10 Artists<br><br></span></h2>
+      <table class="table table-bordered table-striped table-hover">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Artist</th>
+            <th>Streams</th>
+            <th>Instagram Popularity</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="x in Artist">
+            <td>{{ $index + 1 }}</td>
+            <td>{{ x.MaxArtist }}</td>
+            <td>{{ x.MaxArtistPlays }}</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+  </div>
+
+  <hr class="featurette-divider">
+
     <div class="featurette">
     <h2 class="featurette-heading"><span class="muted">Top Song<br><br></span> {{MaxSong}}</h2>
       <img class="featurette-image pull-right" src="{{MaxSongArt}}">
     <h3 class="featurette-heading"><span class="muted">{{MaxSongArtist}}</span></h3>
     <h4 class="featurette-heading"><br>{{MaxSongPlays}} Streams</h4>
+  </div>
+
+  <hr class="featurette-divider">
+
+  <div class="featurette">
+    <h2 class="featurette-heading"><span class="muted">Top 10 Songs<br><br></span></h2>
+      <table class="table table-bordered table-striped table-hover">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Artist</th>
+            <th>Title</th>
+            <th>Streams</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="x in Song">
+          <td>{{ $index + 1 }}</td>
+          <td>{{ x.MaxSongArtist }}</td>
+          <td>{{ x.MaxSong }}</td>
+          <td>{{ x.MaxSongPlays }}</td>
+        </tr>
+        </tbody>
+      </table>
   </div>
 
   <hr class="featurette-divider">

@@ -2,7 +2,6 @@
 
 var moment = require('moment');
 
-
 var igramGetID = function(req, res) {
   var https = require("https");
   var username = req.params.username;
@@ -11,13 +10,13 @@ var igramGetID = function(req, res) {
   // req.params.username
   var request = https.get(url, function (response) {
 
-      var buffer = "", 
+      var buffer = "",
           data,
           posts;
 
       response.on("data", function (chunk) {
           buffer += chunk;
-      }); 
+      });
 
       response.on("end", function (err) {
 
@@ -26,8 +25,8 @@ var igramGetID = function(req, res) {
           // userid = data.data[0].id;
           posts = getUserPosts(data.data[0].id, data.data[0].username, res);
           // res.status(200).send(data.data[0].username + "</br>" + data.data[0].id + "</br>" + "</br>" + posts);
-      }); 
-  }); 
+      });
+  });
 }
 
 function getUserPosts(userid, username, res) {
@@ -39,19 +38,19 @@ function getUserPosts(userid, username, res) {
   // req.params.username
   var request = https.get(url, function (response) {
 
-      var buffer = "", 
+      var buffer = "",
           data,
           nextUrl,
           firstPost;
 
-      var countPost = 0, 
+      var countPost = 0,
           countLikes = 0,
           countComments = 0;
 
 
       response.on("data", function (chunk) {
           buffer += chunk;
-      }); 
+      });
 
       response.on("end", function (err) {
 
@@ -59,7 +58,7 @@ function getUserPosts(userid, username, res) {
           var allPost = "", eachPost;
           var dateLimit = moment().subtract(3, 'months');
 
-          for (var i = 0; i < data.data.length; i++) { 
+          for (var i = 0; i < data.data.length; i++) {
             var date = moment.unix(parseInt(data.data[i].created_time));
             var formatted = date.format("MM-DD-YYYY hh:MM:ss");
             var caption = "";
@@ -70,8 +69,8 @@ function getUserPosts(userid, username, res) {
 
             if (!data.data[i].caption) {caption = "untitled";}
             else {caption = data.data[i].caption.text}
-            eachPost = caption + "</br>" + data.data[i].images.standard_resolution.url + "</br>" + "likes: " + data.data[i].likes.count + "</br>" + "comments: " + data.data[i].comments.count + "</br>" + "time: " + formatted; 
-            allPost += (eachPost + "</br>" + "</br>"); 
+            eachPost = caption + "</br>" + data.data[i].images.standard_resolution.url + "</br>" + "likes: " + data.data[i].likes.count + "</br>" + "comments: " + data.data[i].comments.count + "</br>" + "time: " + formatted;
+            allPost += (eachPost + "</br>" + "</br>");
 
             countPost += 1;
             countComments += parseInt(data.data[i].comments.count);
@@ -89,8 +88,8 @@ function getUserPosts(userid, username, res) {
           } else {
             getMorePosts(username, userid, allPost, nextUrl, countPost, countComments, countLikes, res)
           }
-      }); 
-  }); 
+      });
+  });
 
 }
 
@@ -103,14 +102,14 @@ function getMorePosts(username, userid, prevText, nextUrl, countPost, countComme
   // req.params.username
   var request = https.get(url, function (response) {
 
-      var buffer = "", 
+      var buffer = "",
           data,
           nextUrl,
           firstPost;
 
       response.on("data", function (chunk) {
           buffer += chunk;
-      }); 
+      });
 
       response.on("end", function (err) {
 
@@ -118,7 +117,7 @@ function getMorePosts(username, userid, prevText, nextUrl, countPost, countComme
           var allPost = "", eachPost;
           var dateLimit = moment().subtract(3, 'months');
 
-          for (var i = 0; i < data.data.length; i++) { 
+          for (var i = 0; i < data.data.length; i++) {
             var date = moment.unix(parseInt(data.data[i].created_time));
             var formatted = date.format("MM-DD-YYYY hh:MM:ss");
             var caption = "";
@@ -129,7 +128,7 @@ function getMorePosts(username, userid, prevText, nextUrl, countPost, countComme
 
             if (!data.data[i].caption) {caption = "untitled";}
             else {caption = data.data[i].caption.text}
-            eachPost = caption + "</br>" + data.data[i].images.standard_resolution.url + "</br>" + "likes: " + data.data[i].likes.count + "</br>" + "comments: " + data.data[i].comments.count + "</br>" + "time: " + formatted; 
+            eachPost = caption + "</br>" + data.data[i].images.standard_resolution.url + "</br>" + "likes: " + data.data[i].likes.count + "</br>" + "comments: " + data.data[i].comments.count + "</br>" + "time: " + formatted;
             allPost += (eachPost + "</br>" + "</br>");
 
             countPost += 1;
@@ -149,8 +148,8 @@ function getMorePosts(username, userid, prevText, nextUrl, countPost, countComme
           } else {
             getMorePosts(username, userid, allPost, nextUrl, countPost, countComments, countLikes, res);
           }
-      }); 
-  }); 
+      });
+  });
 }
 
 
