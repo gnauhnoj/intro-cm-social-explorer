@@ -1,5 +1,5 @@
 {
-  "name": "last-spot-dash",
+  "name": "last-gram-dash",
   "version": "1.0.0",
   "description": "",
   "main": "server/server.js",
@@ -29,12 +29,9 @@
   "devDependencies": {},
   "repository": {
     "type": "git",
-    "url": "https://github.com/gnauhnoj/last-spot-dash.git"
+    "url": "https://github.com/gnauhnoj/intro-cm-social-explorer"
   },
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/gnauhnoj/last-spot-dash/issues"
-  },
-  "homepage": "https://github.com/gnauhnoj/last-spot-dash"
+  "homepage": "https://github.com/gnauhnoj/intro-cm-social-explorer"
 }
