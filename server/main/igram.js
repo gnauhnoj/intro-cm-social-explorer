@@ -98,8 +98,8 @@ function getPosts(allArtists, artists, url, res) {
             if (!nextUrl) {
               if (artists.length == 0) {
                 console.log(allArtists);
+                updateDatabase(allArtists);
                 res.status(200).send(allArtists);
-
               } else {
                 getID(allArtists, artists, res);
               }
@@ -112,6 +112,21 @@ function getPosts(allArtists, artists, url, res) {
   }); 
 
 }
+
+function updateDatabase(allArtists) {
+
+  async.each(allArtists, function(eachArtist, callback) {
+
+    Artist.update({artist: eachArtist["name"]}, {$set: {igramPosts: eachArtist["totalPosts"], igramComments: eachArtist["totalComments"], igramLikes: eachArtist["totalLikes"]}}, function(err, updated) {
+      if( err || !updated ) console.log("Artist not updated");
+      else console.log("Artist updated");
+    });
+    callback()
+  }, function(err) {
+    console.log("finish updating database")
+  });
+}
+
 
 module.exports = exports = {
   igramGetAll : igramGetAll
