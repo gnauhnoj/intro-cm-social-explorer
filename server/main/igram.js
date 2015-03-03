@@ -1,56 +1,70 @@
 'use strict';
 
 var moment = require('moment');
+var Artist = require('../models/artist.js');
+var async = require('async');
+var https = require("https");
 
-var igramGetID = function(req, res) {
-  var https = require("https");
-  var username = req.params.username;
+var igramGetAll = function (req, res) {
+
+  Artist.find({username: "gnauhnoj"}).sort('-count').limit(10).exec(function(err, topTen) {
+      console.log(topTen);
+      var allArtists = [];
+
+      getID(allArtists, topTen, res);
+    });
+}
+
+function getID(allArtists, artists, res) {
+
+  var currentArtist = artists.pop();
+  var name = currentArtist.artist;
+  var username = encodeURIComponent(name.replace(/\s/g, ''))
   var url = "https://api.instagram.com/v1/users/search?access_token=1663458943.d8bde85.09b90e0507f044fb9c6091fb6d874c1c&q=" + username + "&count=1";
 
-  // req.params.username
+  console.log(name);
+  console.log(url);
   var request = https.get(url, function (response) {
 
-      var buffer = "",
+      var buffer = "", 
           data,
           posts;
 
       response.on("data", function (chunk) {
           buffer += chunk;
-      });
+      }); 
 
       response.on("end", function (err) {
 
           data = JSON.parse(buffer);
 
-          // userid = data.data[0].id;
-          posts = getUserPosts(data.data[0].id, data.data[0].username, res);
+          var thisArtist = {};
+          thisArtist["name"] = name;
+          thisArtist["username"] = username;
+          thisArtist["totalComments"] = 0;
+          thisArtist["totalPosts"] = 0;
+          thisArtist["totalLikes"] = 0;
+          allArtists.push(thisArtist);
+
+          console.log(data.data[0].id)
+          var postsUrl = "https://api.instagram.com/v1/users/" + data.data[0].id + "/media/recent?access_token=1663458943.d8bde85.09b90e0507f044fb9c6091fb6d874c1c";
+          getPosts(allArtists, artists, postsUrl, res);
           // res.status(200).send(data.data[0].username + "</br>" + data.data[0].id + "</br>" + "</br>" + posts);
-      });
-  });
+      }); 
+  }); 
 }
 
-function getUserPosts(userid, username, res) {
-  // console.log(userid + " blaaa");
-  var https = require("https");
-  var url = "https://api.instagram.com/v1/users/" + userid + "/media/recent?access_token=1663458943.d8bde85.09b90e0507f044fb9c6091fb6d874c1c";
-  console.log(url);
+function getPosts(allArtists, artists, url, res) {
 
-  // req.params.username
   var request = https.get(url, function (response) {
 
-      var buffer = "",
+      var buffer = "", 
           data,
-          nextUrl,
-          firstPost;
-
-      var countPost = 0,
-          countLikes = 0,
-          countComments = 0;
-
+          nextUrl = "";
 
       response.on("data", function (chunk) {
           buffer += chunk;
-      });
+      }); 
 
       response.on("end", function (err) {
 
@@ -58,101 +72,62 @@ function getUserPosts(userid, username, res) {
           var allPost = "", eachPost;
           var dateLimit = moment().subtract(3, 'months');
 
-          for (var i = 0; i < data.data.length; i++) {
-            var date = moment.unix(parseInt(data.data[i].created_time));
-            var formatted = date.format("MM-DD-YYYY hh:MM:ss");
-            var caption = "";
+          if (!data.data) {
+            getID(allArtists, artists, res);
+          }
+          else {
+            for (var i = 0; i < data.data.length; i++) { 
+              var date = moment.unix(parseInt(data.data[i].created_time));
+              var caption = "";
+
+              if (date < dateLimit) {
+                break;
+              }
+
+              allArtists[allArtists.length-1]["totalComments"] += parseInt(data.data[i].comments.count);
+              allArtists[allArtists.length-1]["totalPosts"] += 1;
+              allArtists[allArtists.length-1]["totalLikes"] += parseInt(data.data[i].likes.count);
+            }
+
+            nextUrl = data.pagination.next_url;
 
             if (date < dateLimit) {
-              break;
+                nextUrl = "";
+              }
+
+            if (!nextUrl) {
+              if (artists.length == 0) {
+                console.log(allArtists);
+                updateDatabase(allArtists);
+                res.status(200).send(allArtists);
+              } else {
+                getID(allArtists, artists, res);
+              }
+
+            } else {
+              getPosts(allArtists, artists, nextUrl, res);
             }
-
-            if (!data.data[i].caption) {caption = "untitled";}
-            else {caption = data.data[i].caption.text}
-            eachPost = caption + "</br>" + data.data[i].images.standard_resolution.url + "</br>" + "likes: " + data.data[i].likes.count + "</br>" + "comments: " + data.data[i].comments.count + "</br>" + "time: " + formatted;
-            allPost += (eachPost + "</br>" + "</br>");
-
-            countPost += 1;
-            countComments += parseInt(data.data[i].comments.count);
-            countLikes += parseInt(data.data[i].likes.count)
           }
-
-          nextUrl = data.pagination.next_url;
-
-          if (date < dateLimit) {
-              nextUrl = "";
-            }
-
-          if (!nextUrl) {
-            res.status(200).send(username + "</br>" + userid + "</br>" + "Total comments: " + countComments + "</br>" + "Total likes: " + countLikes + "</br>" + "Total posts: " + countPost + "</br>" + nextUrl + "</br>" + "</br>" + allPost);
-          } else {
-            getMorePosts(username, userid, allPost, nextUrl, countPost, countComments, countLikes, res)
-          }
-      });
-  });
+      }); 
+  }); 
 
 }
 
-function getMorePosts(username, userid, prevText, nextUrl, countPost, countComments, countLikes, res) {
+function updateDatabase(allArtists) {
 
-  var https = require("https");
-  var url = nextUrl;
-  console.log(url);
+  async.each(allArtists, function(eachArtist, callback) {
 
-  // req.params.username
-  var request = https.get(url, function (response) {
-
-      var buffer = "",
-          data,
-          nextUrl,
-          firstPost;
-
-      response.on("data", function (chunk) {
-          buffer += chunk;
-      });
-
-      response.on("end", function (err) {
-
-          data = JSON.parse(buffer);
-          var allPost = "", eachPost;
-          var dateLimit = moment().subtract(3, 'months');
-
-          for (var i = 0; i < data.data.length; i++) {
-            var date = moment.unix(parseInt(data.data[i].created_time));
-            var formatted = date.format("MM-DD-YYYY hh:MM:ss");
-            var caption = "";
-
-            if (date < dateLimit) {
-              break;
-            }
-
-            if (!data.data[i].caption) {caption = "untitled";}
-            else {caption = data.data[i].caption.text}
-            eachPost = caption + "</br>" + data.data[i].images.standard_resolution.url + "</br>" + "likes: " + data.data[i].likes.count + "</br>" + "comments: " + data.data[i].comments.count + "</br>" + "time: " + formatted;
-            allPost += (eachPost + "</br>" + "</br>");
-
-            countPost += 1;
-            countComments += parseInt(data.data[i].comments.count);
-            countLikes += parseInt(data.data[i].likes.count)
-          }
-
-          nextUrl = data.pagination.next_url;
-          allPost = prevText + allPost;
-
-          if (date < dateLimit) {
-              nextUrl = "";
-            }
-
-          if (!nextUrl) {
-            res.status(200).send(username + "</br>" + userid + "</br>" + "Total comments: " + countComments + "</br>" + "Total likes: " + countLikes + "</br>" + "Total posts: " + countPost + "</br>" + nextUrl + "</br>" + "</br>" + allPost);
-          } else {
-            getMorePosts(username, userid, allPost, nextUrl, countPost, countComments, countLikes, res);
-          }
-      });
+    Artist.update({artist: eachArtist["name"]}, {$set: {igramPosts: eachArtist["totalPosts"], igramComments: eachArtist["totalComments"], igramLikes: eachArtist["totalLikes"]}}, function(err, updated) {
+      if( err || !updated ) console.log("Artist not updated");
+      else console.log("Artist updated");
+    });
+    callback()
+  }, function(err) {
+    console.log("finish updating database")
   });
 }
 
 
 module.exports = exports = {
-  igramGetID : igramGetID
+  igramGetAll : igramGetAll
 };
