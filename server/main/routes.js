@@ -28,4 +28,10 @@ module.exports = exports = function (router) {
 
   router.route('/buildGraph')
     .get(build.buildReport);
+
+  router.route('/report')
+    .get(function(req, res) {
+      var localpath = path.resolve();
+      res.sendFile(localpath+'/client/public/client/templates/index.html');
+    });
 };

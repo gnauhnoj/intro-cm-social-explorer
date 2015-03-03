@@ -14,7 +14,8 @@ var artistQuery = function(username, res, page, totalPages) {
   if (page > totalPages) {
     // TODO: refactor
     var localpath = path.resolve();
-    res.sendFile(localpath+'/client/public/client/templates/index.html');
+    res.redirect('/instagram');
+    // res.sendFile(localpath+'/client/public/client/templates/index.html');
     return;
   }
   lfm.user.getTopArtists({

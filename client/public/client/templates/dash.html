@@ -34,7 +34,9 @@
             <th>#</th>
             <th>Artist</th>
             <th>Streams</th>
-            <th>Instagram Popularity</th>
+            <th>Instagram Posts</th>
+            <th>Instagram Likes per Post</th>
+            <th>Instagram Comments per Post</th>
           </tr>
         </thead>
         <tbody>
@@ -42,7 +44,9 @@
             <td>{{ $index + 1 }}</td>
             <td>{{ x.MaxArtist }}</td>
             <td>{{ x.MaxArtistPlays }}</td>
-            <td></td>
+            <td>{{ x.igramPosts }}</td>
+            <td>{{ Math.round(x.igramLikes / x.igramPosts) || 0 }}</td>
+            <td>{{ Math.round(x.igramComments / x.igramPosts) || 0 }}</td>
           </tr>
         </tbody>
       </table>

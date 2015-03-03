@@ -11,25 +11,35 @@ app.config(function($routeProvider, $locationProvider) {
     })
 
     .when('/buildGraph', {
-      templateUrl: '/public//client/templates/dash.html',
+      templateUrl: '/public/client/templates/dash.html',
       controller: 'dashArea'
     })
 
     .when('/getstats', {
       templateUrl: '/public/client/templates/dash.html',
       controller: 'getStats'
+    })
+
+    .when('/report', {
+      templateUrl: '/public/client/templates/dash.html',
+      controller: 'report'
     });
 });
 
 app.controller('loginArea', function($scope, $http) {
 });
 
+app.controller('dashArea', function($scope, $http) {
+});
+
 app.controller('getStats', function($scope, $http) {
-  console.log('get request sent');
+});
+
+app.controller('report', function($scope, $http) {
   $http.get('/buildGraph')
     .success(function(data,status,headers,config) {
-      console.log('DataBACK', data);
       // data.sort
+      $scope.Math = window.Math;
       $scope.MaxArtist = data.Artist[0].MaxArtist;
       $scope.MaxArtistArt = data.Artist[0].MaxArtistArt;
       $scope.MaxArtistPlays = data.Artist[0].MaxArtistPlays;
@@ -45,7 +55,4 @@ app.controller('getStats', function($scope, $http) {
     }).error(function(data) {
       console.log('errors', data);
     });
-});
-
-app.controller('dashArea', function($scope, $http) {
 });

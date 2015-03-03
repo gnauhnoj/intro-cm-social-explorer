@@ -12,7 +12,7 @@ var secret = require('./secret.js');
 
 var mongo_url = 'MONGOLAB_URI';
 
-mongoose.connect(process.env[mongo_url] || 'mongodb://localhost/lastspotdash');
+mongoose.connect(process.env[mongo_url] || 'mongodb://localhost/lastgramdash');
 
 /*
  * Include all your global env variables here.

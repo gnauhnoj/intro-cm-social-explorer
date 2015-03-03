@@ -4,16 +4,17 @@ var moment = require('moment');
 var Artist = require('../models/artist.js');
 var async = require('async');
 var https = require("https");
+var path = require('path');
 
 var igramGetAll = function (req, res) {
 
-  Artist.find({username: "gnauhnoj"}).sort('-count').limit(10).exec(function(err, topTen) {
+  Artist.find({username: req.session.username}).sort('-count').limit(10).exec(function(err, topTen) {
       console.log(topTen);
       var allArtists = [];
 
       getID(allArtists, topTen, res);
     });
-}
+};
 
 function getID(allArtists, artists, res) {
 
@@ -26,13 +27,13 @@ function getID(allArtists, artists, res) {
   console.log(url);
   var request = https.get(url, function (response) {
 
-      var buffer = "", 
+      var buffer = "",
           data,
           posts;
 
       response.on("data", function (chunk) {
           buffer += chunk;
-      }); 
+      });
 
       response.on("end", function (err) {
 
@@ -50,21 +51,21 @@ function getID(allArtists, artists, res) {
           var postsUrl = "https://api.instagram.com/v1/users/" + data.data[0].id + "/media/recent?access_token=1663458943.d8bde85.09b90e0507f044fb9c6091fb6d874c1c";
           getPosts(allArtists, artists, postsUrl, res);
           // res.status(200).send(data.data[0].username + "</br>" + data.data[0].id + "</br>" + "</br>" + posts);
-      }); 
-  }); 
+      });
+  });
 }
 
 function getPosts(allArtists, artists, url, res) {
 
   var request = https.get(url, function (response) {
 
-      var buffer = "", 
+      var buffer = "",
           data,
           nextUrl = "";
 
       response.on("data", function (chunk) {
           buffer += chunk;
-      }); 
+      });
 
       response.on("end", function (err) {
 
@@ -76,7 +77,7 @@ function getPosts(allArtists, artists, url, res) {
             getID(allArtists, artists, res);
           }
           else {
-            for (var i = 0; i < data.data.length; i++) { 
+            for (var i = 0; i < data.data.length; i++) {
               var date = moment.unix(parseInt(data.data[i].created_time));
               var caption = "";
 
@@ -99,7 +100,7 @@ function getPosts(allArtists, artists, url, res) {
               if (artists.length == 0) {
                 console.log(allArtists);
                 updateDatabase(allArtists);
-                res.status(200).send(allArtists);
+                res.redirect('/report');
               } else {
                 getID(allArtists, artists, res);
               }
@@ -108,8 +109,8 @@ function getPosts(allArtists, artists, url, res) {
               getPosts(allArtists, artists, nextUrl, res);
             }
           }
-      }); 
-  }); 
+      });
+  });
 
 }
 

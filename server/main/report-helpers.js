@@ -44,6 +44,9 @@ var buildReport = function(req, res){
         var topArtist = {};
         topArtist.MaxArtistPlays = sortedArtists[i].count;
         topArtist.MaxArtist = sortedArtists[i].artist;
+        topArtist.igramPosts = sortedArtists[i].igramPosts;
+        topArtist.igramComments = sortedArtists[i].igramComments;
+        topArtist.igramLikes = sortedArtists[i].igramLikes;
 
         if (sortedArtists[i].art) {
           topArtist.MaxArtistArt = sortedArtists[i].art;
