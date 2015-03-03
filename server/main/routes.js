@@ -17,8 +17,8 @@ module.exports = exports = function (router) {
   router.route('/')
     .get(authServe.serveIndexHTML);
 
-  router.route('/instagram/:username')
-    .get(igram.igramGetID);
+  router.route('/instagram')
+    .get(igram.igramGetAll);
 
   router.route('/auth')
     .get(authServe.authLFM);
