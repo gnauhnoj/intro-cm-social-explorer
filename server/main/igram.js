@@ -7,13 +7,13 @@ var https = require("https");
 var path = require('path');
 
 var igramGetAll = function (req, res) {
-
-  Artist.find({username: req.session.username}).sort('-count').limit(10).exec(function(err, topTen) {
+  var lfmUser = req.session.username;
+  Artist.find({username: lfmUser}).sort('-count').limit(10).exec(function(err, topTen) {
       console.log(topTen);
       var allArtists = [];
 
       if (topTen.length > 0) {
-        getID(allArtists, topTen, res);
+        getID(allArtists, topTen, res, lfmUser);
       } else {
         console.log('redirect');
         res.redirect('/report');
@@ -21,7 +21,7 @@ var igramGetAll = function (req, res) {
     });
 };
 
-function getID(allArtists, artists, res) {
+function getID(allArtists, artists, res, lfmUser) {
   var currentArtist = artists.pop();
   var name = currentArtist.artist;
   var username = encodeURIComponent(name.replace(/\s/g, ''));
@@ -58,13 +58,13 @@ function getID(allArtists, artists, res) {
           }
           console.log(tempName.id);
           var postsUrl = "https://api.instagram.com/v1/users/" + tempName.id + "/media/recent?access_token=1663458943.d8bde85.09b90e0507f044fb9c6091fb6d874c1c";
-          getPosts(allArtists, artists, postsUrl, res);
+          getPosts(allArtists, artists, postsUrl, res, lfmUser);
           // res.status(200).send(data.data[0].username + "</br>" + data.data[0].id + "</br>" + "</br>" + posts);
       });
   });
 }
 
-function getPosts(allArtists, artists, url, res) {
+function getPosts(allArtists, artists, url, res, lfmUser) {
 
   var request = https.get(url, function (response) {
 
@@ -108,12 +108,12 @@ function getPosts(allArtists, artists, url, res) {
             if (!nextUrl) {
               if (artists.length === 0) {
                 console.log(allArtists);
-                updateDatabase(allArtists, req, res);
+                updateDatabase(allArtists, res, lfmUser);
               } else {
-                getID(allArtists, artists, res);
+                getID(allArtists, artists, res), lfmUser;
               }
             } else {
-              getPosts(allArtists, artists, nextUrl, res);
+              getPosts(allArtists, artists, nextUrl, res, lfmUser);
             }
           }
       });
@@ -121,12 +121,12 @@ function getPosts(allArtists, artists, url, res) {
 
 }
 
-function updateDatabase(allArtists, req, res) {
+function updateDatabase(allArtists, res, lfmUser) {
   async.each(allArtists, function(eachArtist, callback) {
     console.log(eachArtist);
-    var search = {artist: eachArtist["name"], username: req.session.username};
+    var search = {artist: eachArtist["name"], username: lfmUser};
     var update = {igramPosts: eachArtist["totalPosts"], igramComments: eachArtist["totalComments"], igramLikes: eachArtist["totalLikes"]};
-    Artist.update(search, {$set: update}, function(err, updated) {
+    Artist.update({artist: eachArtist["name"]}, {$set: update}, function(err, updated) {
       if( err ) {
         console.log("Artist not updated");
       } else {
