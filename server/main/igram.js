@@ -12,7 +12,7 @@ var igramGetAll = function (req, res) {
       console.log(topTen);
       var allArtists = [];
 
-      console.log(topTen)
+      console.log(topTen);
       if (topTen.length > 0) {
         getID(allArtists, topTen, res);
       } else {
@@ -25,7 +25,7 @@ var igramGetAll = function (req, res) {
 function getID(allArtists, artists, res) {
   var currentArtist = artists.pop();
   var name = currentArtist.artist;
-  var username = encodeURIComponent(name.replace(/\s/g, ''))
+  var username = encodeURIComponent(name.replace(/\s/g, ''));
   var url = "https://api.instagram.com/v1/users/search?access_token=1663458943.d8bde85.09b90e0507f044fb9c6091fb6d874c1c&q=" + username + "&count=1";
 
   console.log(name);
@@ -44,16 +44,21 @@ function getID(allArtists, artists, res) {
 
           data = JSON.parse(buffer);
 
-          var thisArtist = {};
-          thisArtist["name"] = name;
-          thisArtist["username"] = username;
-          thisArtist["totalComments"] = 0;
-          thisArtist["totalPosts"] = 0;
-          thisArtist["totalLikes"] = 0;
-          allArtists.push(thisArtist);
+          if (data.data[0]) {
+            var thisArtist = {};
+            thisArtist["name"] = name;
+            thisArtist["username"] = username;
+            thisArtist["totalComments"] = 0;
+            thisArtist["totalPosts"] = 0;
+            thisArtist["totalLikes"] = 0;
+            allArtists.push(thisArtist);
 
-          console.log(data.data[0].id)
-          var postsUrl = "https://api.instagram.com/v1/users/" + data.data[0].id + "/media/recent?access_token=1663458943.d8bde85.09b90e0507f044fb9c6091fb6d874c1c";
+            var userName = data.data[0];
+          } else {
+            var userName = {id: 0};
+          }
+          console.log(userName.id);
+          var postsUrl = "https://api.instagram.com/v1/users/" + userName.id + "/media/recent?access_token=1663458943.d8bde85.09b90e0507f044fb9c6091fb6d874c1c";
           getPosts(allArtists, artists, postsUrl, res);
           // res.status(200).send(data.data[0].username + "</br>" + data.data[0].id + "</br>" + "</br>" + posts);
       });
@@ -102,7 +107,7 @@ function getPosts(allArtists, artists, url, res) {
               }
 
             if (!nextUrl) {
-              if (artists.length == 0) {
+              if (artists.length === 0) {
                 console.log(allArtists);
                 updateDatabase(allArtists);
                 res.redirect('/report');
