@@ -123,11 +123,14 @@ function getPosts(allArtists, artists, url, res) {
 
 function updateDatabase(allArtists, res) {
   async.each(allArtists, function(eachArtist, callback) {
-    console.log(eachArtist);
     Artist.update({artist: eachArtist["name"]}, {$set: {igramPosts: eachArtist["totalPosts"], igramComments: eachArtist["totalComments"], igramLikes: eachArtist["totalLikes"]}}, function(err, updated) {
-      if( err || !updated ) console.log("Artist not updated");
-      else console.log("Artist updated");
-      callback();
+      if( err ) {
+        console.log("Artist not updated");
+      } else {
+        console.log("Artist updated");
+        console.log(updated);
+        callback();
+      }
     });
   }, function(err) {
     if (err) throw(err);
