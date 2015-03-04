@@ -83,7 +83,7 @@ function getPosts(allArtists, artists, url, res, lfmUser) {
           var dateLimit = moment().subtract(3, 'months');
 
           if (!data.data) {
-            getID(allArtists, artists, res);
+            getID(allArtists, artists, res, lfmUser);
           }
           else {
             for (var i = 0; i < data.data.length; i++) {
@@ -110,7 +110,7 @@ function getPosts(allArtists, artists, url, res, lfmUser) {
                 console.log(allArtists);
                 updateDatabase(allArtists, res, lfmUser);
               } else {
-                getID(allArtists, artists, res), lfmUser;
+                getID(allArtists, artists, res, lfmUser);
               }
             } else {
               getPosts(allArtists, artists, nextUrl, res, lfmUser);
@@ -123,7 +123,7 @@ function getPosts(allArtists, artists, url, res, lfmUser) {
 
 function updateDatabase(allArtists, res, lfmUser) {
   async.each(allArtists, function(eachArtist, callback) {
-    console.log(eachArtist);
+    console.log(lfmUser);
     var search = {artist: eachArtist["name"], username: lfmUser};
     var update = {igramPosts: eachArtist["totalPosts"], igramComments: eachArtist["totalComments"], igramLikes: eachArtist["totalLikes"]};
     Artist.update(search, {$set: update}, function(err, updated) {
