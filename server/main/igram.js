@@ -83,7 +83,12 @@ function getPosts(allArtists, artists, url, res, lfmUser) {
           var dateLimit = moment().subtract(3, 'months');
 
           if (!data.data) {
-            getID(allArtists, artists, res, lfmUser);
+            if (artists.length === 0) {
+              console.log(allArtists);
+              updateDatabase(allArtists, res, lfmUser);
+            } else {
+              getID(allArtists, artists, res, lfmUser);
+            }
           }
           else {
             for (var i = 0; i < data.data.length; i++) {
