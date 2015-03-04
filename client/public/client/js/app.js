@@ -54,6 +54,17 @@ app.controller('report', function($scope, $http) {
       $scope.MaxSongArtist = topSong.MaxSongArtist;
       $scope.MaxSongPlays = topSong.MaxSongPlays || 0;
       $scope.MaxSongArt = topSong.MaxSongArt;
+      $scope.Ranks = [];
+
+      for (var i = 0; i < $scope.Artist.length; i++) {
+        var art = $scope.Artist[i];
+        art.inter = Math.round((art.igramComments + art.igramLikes) / art.igramPosts) || 0;
+        $scope.Ranks.push(art.inter);
+      }
+
+      $scope.Ranks.sort(function(a, b) {
+        return b-a;
+      });
     }).error(function(data) {
       console.log('errors', data);
     });

@@ -37,7 +37,8 @@
             <th>Instagram Posts</th>
             <th>Instagram Likes</th>
             <th>Instagram Comments</th>
-            <th>Instagram Interactions per Post</th>
+            <th>Popularity Rank</th>
+            <th>Popularity +/-</th>
           </tr>
         </thead>
         <tbody>
@@ -48,7 +49,8 @@
             <td>{{ x.igramPosts || 0}}</td>
             <td>{{ x.igramLikes || 0 }}</td>
             <td>{{ x.igramComments || 0 }}</td>
-            <td>{{ Math.round((x.igramComments + x.igramLikes) / x.igramPosts) || 0 }}</td>
+            <td>{{ Ranks.indexOf(x.inter)+1 }}</td>
+            <td>{{ (Ranks.indexOf(x.inter)+1) - ($index + 1) }}</td>
           </tr>
         </tbody>
       </table>
