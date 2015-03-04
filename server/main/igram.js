@@ -52,12 +52,12 @@ function getID(allArtists, artists, res) {
             thisArtist["totalLikes"] = 0;
             allArtists.push(thisArtist);
 
-            var userName = data.data[0];
+            var tempName = data.data[0];
           } else {
-            var userName = {id: 0};
+            var tempName = {id: 0};
           }
-          console.log(userName.id);
-          var postsUrl = "https://api.instagram.com/v1/users/" + userName.id + "/media/recent?access_token=1663458943.d8bde85.09b90e0507f044fb9c6091fb6d874c1c";
+          console.log(tempName.id);
+          var postsUrl = "https://api.instagram.com/v1/users/" + tempName.id + "/media/recent?access_token=1663458943.d8bde85.09b90e0507f044fb9c6091fb6d874c1c";
           getPosts(allArtists, artists, postsUrl, res);
           // res.status(200).send(data.data[0].username + "</br>" + data.data[0].id + "</br>" + "</br>" + posts);
       });
@@ -127,8 +127,8 @@ function updateDatabase(allArtists, res) {
     Artist.update({artist: eachArtist["name"]}, {$set: {igramPosts: eachArtist["totalPosts"], igramComments: eachArtist["totalComments"], igramLikes: eachArtist["totalLikes"]}}, function(err, updated) {
       if( err || !updated ) console.log("Artist not updated");
       else console.log("Artist updated");
+      callback()
     });
-    callback()
   }, function(err) {
     console.log("finish updating database")
     res.redirect('/report');
