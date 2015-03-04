@@ -1,8 +1,6 @@
 # intro-cm-social-explorer (Spring 2015)
-# Last-Gram-Dash
-
 ## Web App
-Test out the FoodScore App online: [https://last-gram-dash.herokuapp.com/](https://last-gram-dash.herokuapp.com/)
+Test out the Last-Gram-Dash App online: [https://last-gram-dash.herokuapp.com/](https://last-gram-dash.herokuapp.com/)
 
 ## Team Members
 Jonathan Huang
