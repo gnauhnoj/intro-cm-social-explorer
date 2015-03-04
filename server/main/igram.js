@@ -126,7 +126,7 @@ function updateDatabase(allArtists, res, lfmUser) {
     console.log(eachArtist);
     var search = {artist: eachArtist["name"], username: lfmUser};
     var update = {igramPosts: eachArtist["totalPosts"], igramComments: eachArtist["totalComments"], igramLikes: eachArtist["totalLikes"]};
-    Artist.update({artist: eachArtist["name"]}, {$set: update}, function(err, updated) {
+    Artist.update(search, {$set: update}, function(err, updated) {
       if( err ) {
         console.log("Artist not updated");
       } else {
