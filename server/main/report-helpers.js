@@ -40,7 +40,7 @@ var buildReport = function(req, res){
     }
 
     Artist.find({username: req.session.username}).sort('-count').exec(function(err, sortedArtists) {
-      for (var i = 0; i < 10; i++) {
+      for (var i = 0; i < 10 && sortedArtists[i]; i++) {
         var topArtist = {};
         topArtist.MaxArtistPlays = sortedArtists[i].count;
         topArtist.MaxArtist = sortedArtists[i].artist;

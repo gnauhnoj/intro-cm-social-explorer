@@ -40,18 +40,20 @@ app.controller('report', function($scope, $http) {
     .success(function(data,status,headers,config) {
       // data.sort
       $scope.Math = window.Math;
-      $scope.MaxArtist = data.Artist[0].MaxArtist;
-      $scope.MaxArtistArt = data.Artist[0].MaxArtistArt;
-      $scope.MaxArtistPlays = data.Artist[0].MaxArtistPlays;
-      $scope.MaxSong = data.Song[0].MaxSong;
-      $scope.MaxSongArtist = data.Song[0].MaxSongArtist;
-      $scope.MaxSongPlays = data.Song[0].MaxSongPlays;
-      $scope.MaxSongArt = data.Song[0].MaxSongArt;
+      $scope.Artist = data.Artist;
+      $scope.Song = data.Song;
       $scope.minutes = Math.round(data.minutes);
       $scope.username = data.username;
       $scope.total = data.total;
-      $scope.Artist = data.Artist;
-      $scope.Song = data.Song;
+      var topArtist = data.Artist[0] || {};
+      var topSong = data.Song[0] || {};
+      $scope.MaxArtist = topArtist.MaxArtist;
+      $scope.MaxArtistArt = topArtist.MaxArtistArt;
+      $scope.MaxArtistPlays = topArtist.MaxArtistPlays || 0;
+      $scope.MaxSong = topSong.MaxSong;
+      $scope.MaxSongArtist = topSong.MaxSongArtist;
+      $scope.MaxSongPlays = topSong.MaxSongPlays || 0;
+      $scope.MaxSongArt = topSong.MaxSongArt;
     }).error(function(data) {
       console.log('errors', data);
     });
