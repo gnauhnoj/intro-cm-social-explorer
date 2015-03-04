@@ -127,11 +127,14 @@ function updateDatabase(allArtists, res) {
     Artist.update({artist: eachArtist["name"]}, {$set: {igramPosts: eachArtist["totalPosts"], igramComments: eachArtist["totalComments"], igramLikes: eachArtist["totalLikes"]}}, function(err, updated) {
       if( err || !updated ) console.log("Artist not updated");
       else console.log("Artist updated");
-      callback()
+      callback();
     });
   }, function(err) {
-    console.log("finish updating database")
-    res.redirect('/report');
+    if (err) throw(err);
+    else {
+      console.log("finish updating database");
+      res.redirect('/report');
+    }
   });
 }
 
