@@ -108,11 +108,10 @@ function getPosts(allArtists, artists, url, res) {
             if (!nextUrl) {
               if (artists.length === 0) {
                 console.log(allArtists);
-                updateDatabase(allArtists);
+                updateDatabase(allArtists, res);
               } else {
                 getID(allArtists, artists, res);
               }
-
             } else {
               getPosts(allArtists, artists, nextUrl, res);
             }
@@ -122,7 +121,7 @@ function getPosts(allArtists, artists, url, res) {
 
 }
 
-function updateDatabase(allArtists) {
+function updateDatabase(allArtists, res) {
   async.each(allArtists, function(eachArtist, callback) {
     Artist.update({artist: eachArtist["name"]}, {$set: {igramPosts: eachArtist["totalPosts"], igramComments: eachArtist["totalComments"], igramLikes: eachArtist["totalLikes"]}}, function(err, updated) {
       if( err || !updated ) console.log("Artist not updated");
