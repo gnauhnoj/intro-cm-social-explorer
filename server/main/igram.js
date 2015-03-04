@@ -12,9 +12,11 @@ var igramGetAll = function (req, res) {
       console.log(topTen);
       var allArtists = [];
 
-      if (allArtists.length > 0) {
+      console.log(topTen)
+      if (topTen.length > 0) {
         getID(allArtists, topTen, res);
       } else {
+        console.log('redirect');
         res.redirect('/report');
       }
     });
