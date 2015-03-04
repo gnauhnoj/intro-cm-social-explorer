@@ -12,12 +12,15 @@ var igramGetAll = function (req, res) {
       console.log(topTen);
       var allArtists = [];
 
-      getID(allArtists, topTen, res);
+      if (allArtists.length > 0) {
+        getID(allArtists, topTen, res);
+      } else {
+        res.redirect('/report');
+      }
     });
 };
 
 function getID(allArtists, artists, res) {
-
   var currentArtist = artists.pop();
   var name = currentArtist.artist;
   var username = encodeURIComponent(name.replace(/\s/g, ''))
