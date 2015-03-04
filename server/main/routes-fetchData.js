@@ -26,9 +26,9 @@ var artistQuery = function(username, res, page, totalPages) {
     page: page
   }, function(err, topArtists) {
     if (err) {console.log(err); throw(err);}
-    var artists = topArtists.artist;
+    var artists = topArtists.artist || [];
     var stats = topArtists['@attr'];
-    var total = stats.total;
+    var total = (stats) ? stats.total : 0;
     console.log('Total Artists: ', total);
     var pages = Math.ceil(total / 200);
 
@@ -68,10 +68,11 @@ var trackQuery = function(username, res, page, totalPages) {
     api_key: lfm.api_key,
     page: page
   }, function(err, topTracks) {
+    console.log(topTracks)
     if (err) {console.log(err); throw(err);}
-    var tracks = topTracks.track;
+    var tracks = topTracks.track || [];
     var stats = topTracks['@attr'];
-    var total = stats.total;
+    var total =(stats) ? stats.total : 0;
     console.log('Total Songs: ', total);
     var pages = Math.ceil(total / 200);
 
@@ -83,7 +84,7 @@ var trackQuery = function(username, res, page, totalPages) {
         username: username
       };
       if (track.duration.length) {
-        newSong.minutes = parseInt(track.duration)/60;
+          newSong.minutes = parseInt(track.duration)/60;
       }
       if (track.image) {
         newSong.art = track.image[track.image.length-1]['#text'];
