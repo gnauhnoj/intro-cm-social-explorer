@@ -31,14 +31,14 @@
       <table class="table table-bordered table-striped table-hover">
         <thead>
           <tr>
-            <th>#</th>
+            <th>Rank</th>
             <th>Artist</th>
             <th>Streams</th>
             <th>Instagram Posts</th>
-            <th>Instagram Likes</th>
-            <th>Instagram Comments</th>
-            <th>Popularity Rank</th>
-            <th>Popularity +/-</th>
+            <th>Likes (per)</th>
+            <th>Comments (per)</th>
+            <th>Popularity</th>
+            <th>Ranking +/-</th>
           </tr>
         </thead>
         <tbody>
@@ -47,8 +47,8 @@
             <td>{{ x.MaxArtist }}</td>
             <td>{{ x.MaxArtistPlays }}</td>
             <td>{{ x.igramPosts || 0}}</td>
-            <td>{{ x.igramLikes || 0 }}</td>
-            <td>{{ x.igramComments || 0 }}</td>
+            <td>{{ Math.round(x.igramLikes / x.igramPosts) || 0 }}</td>
+            <td>{{ Math.round(x.igramComments / x.igramPosts) || 0 }}</td>
             <td>{{ Ranks.indexOf(x.inter)+1 }}</td>
             <td>{{ (Ranks.indexOf(x.inter)+1) - ($index + 1) }}</td>
           </tr>

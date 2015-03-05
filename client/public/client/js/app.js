@@ -23,21 +23,33 @@ app.config(function($routeProvider, $locationProvider) {
     .when('/report', {
       templateUrl: '/public/client/templates/dash.html',
       controller: 'report'
+    })
+
+    .when('/demoReport', {
+      templateUrl: '/public/client/templates/demo.html',
+      controller: 'demoReport'
     });
 });
 
-app.controller('loginArea', function($scope, $http) {
+app.controller('loginArea', function($scope) {
 });
 
-app.controller('dashArea', function($scope, $http) {
+app.controller('dashArea', function($scope) {
 });
 
-app.controller('getStats', function($scope, $http) {
+app.controller('getStats', function($scope) {
 });
 
-app.controller('report', function($scope, $http) {
+app.controller('demoReport', function($scope) {
+});
+
+app.controller('report', function($scope, $http, $location) {
   $http.get('/buildGraph')
     .success(function(data,status,headers,config) {
+      if (!data.total) {
+        $location.path("/demoReport");
+      }
+
       // data.sort
       $scope.Math = window.Math;
       $scope.Artist = data.Artist;
