@@ -21,17 +21,26 @@ var authLFM = function(req, res) {
       // alternatively just use req.query
       req.session.username = session.username;
       req.session.key = session.key;
-      // delete prexisting Report
-      Report.remove({username : session.username}, function(err) {
-        console.log('Report collection removed');
+      Report.remove({username : { $exists: false }}, function(err) {
+        console.log('Empty Report removed');
       });
-      // TODO: this is hella dumb. maybe create references from report to Song/Artists
+      Song.remove({username : { $exists: false }}, function(err) {
+        console.log('Empty Song removed');
+      });
+      Artist.remove({username : { $exists: false }}, function(err) {
+        console.log('Empty Artist removed');
+      });
+      // delete prexisting Report
       Song.remove({username : session.username}, function(err) {
         console.log('Song collection removed');
       });
       Artist.remove({username : session.username}, function(err) {
         console.log('Artist collection removed');
       });
+      Report.remove({username : session.username}, function(err) {
+        console.log('Report collection removed');
+      });
+
       res.redirect('/getstats');
     }
   });
