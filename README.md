@@ -7,7 +7,7 @@ Jonathan Huang
 Muhammad Khadafi
 
 ## Explanation
-###O verall Idea:
+###Overall Idea:
 A 3 month recap for Last.fm users to see their listening statistics (total count of songs and minutes listened, top artists, top songs). Performs an Instagram analysis of a user's top Artists to see how the user's listening ranking compares to relative Instagram popularity (as judged by [likes + comments]/posts).
 
 ### APIs Used:
@@ -38,4 +38,4 @@ Once all the API data has been collected for the user, we build the user's repor
 - Once the report entry is saved to the database, the server serves the front end app.
 
 ##### Front End Display
-The app's front end is built in Angular and Bootstrap. Angular was chosen to flexibly display the data collected by utilizing Angular's data binding. On the front end, we collect the Instagram statistics for the top 10 artists, create a ranking for the artists based on their relative popularity, and calculate the discrepancy between their instagram ranking and their listening frequency ranking.
+The app's front end is built in Angular and Bootstrap. Angular was chosen to flexibly display the data collected by utilizing Angular's data binding. On the front end, we collect the Instagram statistics for the top 10 artists (over the same 3 month period), create a ranking for the artists based on their relative popularity, and calculate the discrepancy between their instagram ranking and their listening frequency ranking. If no lastfm activity is found, the app serves a static demo dashboard.
